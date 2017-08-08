@@ -9,9 +9,11 @@ from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_a
 def main():
 
     train_gen, val_gen = data_gen(use_sample=False)
-    model = build_simple_model()
+    model = build_model()
     # import pudb;pudb.set_trace()
-    model.compile(optimizer=O.rmsprop(lr=0.0001), loss='binary_crossentropy', metrics=['accuracy'])
+    model.compile(optimizer=O.rmsprop(lr=0.001),
+                  loss='binary_crossentropy',
+                  metrics=['accuracy'])
     model.fit_generator(
         train_gen,
         steps_per_epoch=200,
@@ -24,8 +26,8 @@ def main():
 
 def data_gen(use_sample=False, batch_size=8, target_size=(224, 224)):
     base_path = 'data/sample/' if use_sample else 'data/full/'
-    train_generator = ImageDataGenerator(rescale=1/255)
-    test_generator = ImageDataGenerator(rescale=1/255)
+    train_generator = ImageDataGenerator() #rescale=1/255)
+    test_generator = ImageDataGenerator() #rescale=1/255)
 
     train_gen = train_generator.flow_from_directory(
         base_path + 'train/',
@@ -67,18 +69,8 @@ def build_model():
     # m = L.Flatten()(vgg.output)
     m = vgg.output
     # m = L.Dense(100, activation='relu')(m)
-    m = L.Dense(1, activation='sigmoid')(m)
+    m = L.Dense(1, activation='softmax')(m)
     return M.Model(vgg.input, m)
-
-# initial_model = VGG16(weights="imagenet", include_top=False)
-# last = model.output
-
-# x = Flatten()(last)
-# x = Dense(1024, activation='relu')(x)
-# preds = Dense(200, activation='softmax')(x)
-
-# model = Model(initial_model.input, preds)
-#     return vgg
 
 if __name__ == '__main__':
     main()
