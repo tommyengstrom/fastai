@@ -10,7 +10,7 @@ def main():
     train_gen, val_gen = data_gen(use_sample=True, img_size=img_size)
     model = build_vgg_model(img_size=img_size)
     model.compile(optimizer=O.rmsprop(lr=0.001),
-                  loss='binary_crossentropy',
+                  loss='categorical_crossentropy',
                   metrics=['accuracy'])
     model.fit_generator(
         train_gen,
@@ -30,13 +30,13 @@ def data_gen(img_size, use_sample=False, batch_size=16):
         base_path + 'train/',
         target_size=img_size,
         batch_size=batch_size,
-        class_mode='binary'
+        class_mode='categorical'
         )
     val_gen = image_generator.flow_from_directory(
         base_path + 'validation/',
         target_size=img_size,
         batch_size=batch_size,
-        class_mode='binary'
+        class_mode='categorical'
        )
     return train_gen, val_gen
 
@@ -66,7 +66,7 @@ def build_vgg_model(img_size):
     # m = L.Flatten()(vgg.output)
     m = vgg.output
     # m = L.Dense(100, activation='relu')(m)
-    m = L.Dense(1, activation='softmax')(m)
+    m = L.Dense(2, activation='softmax')(m)
     return M.Model(vgg.input, m)
 
 if __name__ == '__main__':
