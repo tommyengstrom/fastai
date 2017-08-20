@@ -8,21 +8,22 @@ def main():
     img_size = (224, 224)
 
     train_gen, val_gen = data_gen(use_sample=True, img_size=img_size)
-    model = build_vgg_model(img_size=img_size)
-    model.compile(optimizer=O.rmsprop(lr=0.001),
+    model = build_simple_model(img_size=img_size)
+    model.compile(optimizer=O.adam(),
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
+    model.summary()
     model.fit_generator(
         train_gen,
-        steps_per_epoch=200,
-        epochs=5,
+        steps_per_epoch=20,
+        epochs=7,
         validation_data=val_gen,
-        validation_steps=50
+        validation_steps=5
         )
     model.save_weights('model_weights.hdf5')
     import pudb; pudb.set_trace()
 
-def data_gen(img_size, use_sample=False, batch_size=16):
+def data_gen(img_size, use_sample=False, batch_size=32):
     base_path = 'data/sample/' if use_sample else 'data/full/'
     image_generator = ImageDataGenerator() #rescale=1/255)
 
@@ -43,19 +44,24 @@ def data_gen(img_size, use_sample=False, batch_size=16):
 
 def build_simple_model(img_size):
     return M.Sequential(
-        [ L.Conv2D(32, (3, 3), input_shape=img_size + (3,))
+        [ L.Conv2D(16, (3, 3), input_shape=img_size + (3,))
         , L.Activation('relu')
+        , L.BatchNormalization(axis=1)
         , L.MaxPooling2D(pool_size=(2, 2))
         , L.Conv2D(32, (3, 3))
         , L.Activation('relu')
+        , L.BatchNormalization(axis=1)
         , L.MaxPooling2D(pool_size=(2, 2))
         , L.Conv2D(64, (3, 3))
         , L.Activation('relu')
+        , L.BatchNormalization(axis=1)
         , L.MaxPooling2D(pool_size=(2, 2))
         , L.Flatten()
+        , L.BatchNormalization()
         , L.Dense(256, activation='relu')
-        , L.Dropout(0.5)
-        , L.Dense(1, activation='softmax')
+        , L.BatchNormalization()
+#        , L.Dropout(0.5)
+        , L.Dense(2, activation='softmax')
         ])
 
 def build_vgg_model(img_size):

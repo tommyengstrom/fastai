@@ -1,0 +1,39 @@
+* Notes
+** Convolutional networks
+https://www.youtube.com/watch?v=AgkfIQ4IGaM
+
+* Questions
+** What are the theoretical justification for using softmax instead of some other way to normalize outputs to probabilities?
+** Why should you use `axis=1` when using BatchNorm on a convolutional layer?
+** How do we pick the number of features for each layer in a sequence of convolutional layers?
+** What size should we pick of the convolutional filters and why?
+** Given a convolution layer with 10 3x3 filters, what is the output?
+10 representation of the image, one for each 3x3 filter.
+** What is zero padding used for?
+In order to return an image of the same size after the convolutional layer. If we're using 16 3x3 filters on a 10x10 image, then without padding the output would be 8x8x16 per filter. Wrapping the image in zeros turns the input into a 12x12 image, making the output 10x10x16.
+** Why use max pooling?
+Max pooling forces the nework to consider a larger part of the image, i.e. it's a way to make the network zoom out.
+** What is the definion of softmax?
+for a n-dimentional vector x:
+softmax(x_i) = e^x_i / sum_i (e^x_i)
+** What is stated by the Universal approximation theorem?
+That any sufficiently large network can approximate any arbitrarily complex function.
+** How do convolutional layer compare to dense layers in terms of memory and compute time?
+Convolutional layers take a long time to compute, since we're creating one copy of the image per channel and feature. They do not contain all that many weights though, i.e. features*filterSize. Dense layers are the other way around, fast to compute but requires a lot of memory.
+** How is dropout handeled when using the network to predict?
+Weights are scaled according to dropout rate so that the average input to the next layer stays the same. It can also be done by rescaling the weights at training time, as keras does, in which case no rescaling is required at test time.
+** What can be done when a model is overfitting?
+Add more data, use data augmentation, use architechtures that generalize better, add regularization, reduce model complexity.
+** What is batch normalization?
+** Given a layer with 10 units, walk through the process of adding batch normalization.
+** When and where should you add batch normalization?
+** Given a 100x100 image and a 3x3 filter, how is the result calculated?
+take a non-edge pixel (x,y) and it's 8 adjecent pixels, perform an element-wise multiplication between the 3x3 image block and the filter, then sum them up to get the output.
+** When stacking convolutional layers with filter size 3x3, what is the shape of the filters in the second layer?
+3x3xNrOfFiltersInLayer1
+** What is the shape of the output when performing max-pooling on a tensor of size 100x100x20 (x, y, features)?
+Each 2x2 block in the first two dimensions would be squeezed down to one pixel. Output shape would be 50x50x20
+** What is the main difference between SDG and adagrad?
+** Whats the difference between adagrad and rmsprop?
+** How do you pick the size of the validation set?
+Test a bunch of sizes and pick a size that seem stable.
