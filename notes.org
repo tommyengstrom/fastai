@@ -34,6 +34,16 @@ take a non-edge pixel (x,y) and it's 8 adjecent pixels, perform an element-wise 
 ** What is the shape of the output when performing max-pooling on a tensor of size 100x100x20 (x, y, features)?
 Each 2x2 block in the first two dimensions would be squeezed down to one pixel. Output shape would be 50x50x20
 ** What is the main difference between SDG and adagrad?
+Adagrad is a dynamic learning rate optimizer. It keeps an indivitual learning rate per parameter.
 ** Whats the difference between adagrad and rmsprop?
+RMSProp uses a moving average of the previous gradients instead of using all of the gradients. This allows RMSProp to increase the learning rate after lowering it (after  escaping a local minima).
 ** How do you pick the size of the validation set?
 Test a bunch of sizes and pick a size that seem stable.
+** What is the idea of collaborative filtering?
+To estimate unknown values of y_n by assuming is it likely similar to the y_n of other, similar x. E.g. if we're trying to figure out what topics a user like we could do so by finding other users similar to this user and pick a value close to theirs.
+** How do you set up collborative filtering between users U and movies M?
+1. Pick some number of features, F.
+2. Create a UxF (user features) matrix and a FxM (movie features) matrix
+3. Create a bias term for each user and movie
+4. Set f = Ufeat `dot` Mfeat + bias - UserMovieScores
+5. Use gradient descent to minimize sse
