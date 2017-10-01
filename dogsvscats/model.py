@@ -7,7 +7,7 @@ from keras.preprocessing.image import ImageDataGenerator
 def main():
     img_size = (224, 224)
 
-    train_gen, val_gen = data_gen(use_sample=True, img_size=img_size)
+    train_gen, val_gen = data_gen(use_sample=False, img_size=img_size)
     model = build_simple_model(img_size=img_size)
     model.compile(optimizer=O.adam(),
                   loss='categorical_crossentropy',
@@ -15,13 +15,13 @@ def main():
     model.summary()
     model.fit_generator(
         train_gen,
-        steps_per_epoch=20,
-        epochs=7,
+        steps_per_epoch=200,
+        epochs=10,
         validation_data=val_gen,
         validation_steps=5
         )
-    model.save_weights('model_weights.hdf5')
     import pudb; pudb.set_trace()
+    model.save_weights('model_weights.hdf5')
 
 def data_gen(img_size, use_sample=False, batch_size=32):
     base_path = 'data/sample/' if use_sample else 'data/full/'
