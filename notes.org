@@ -47,3 +47,10 @@ To estimate unknown values of y_n by assuming is it likely similar to the y_n of
 3. Create a bias term for each user and movie
 4. Set f = Ufeat `dot` Mfeat + bias - UserMovieScores
 5. Use gradient descent to minimize sse
+** What is the difference between collaborative filtering with n features and a linear model with n features?
+The original formulation (?) does not contain any learnable parameters, but it can be reformulated as a linear model.
+** What is psuedo-labeling?
+Use a (fairly good) model to predict the output of unlabeled data, then use that data as part of the training data to make the model generalize better. It's imporant not to use a too large proportion of pseudo-labeled data in each batch, or it will no longer be a good representation of the data.
+** How can a batch nomalization layer be inserted in a trained network?
+When inserting a batchnorm layer between two layers we need to set the variance and bias term of the layer in such a way that it undo the normalization. The model can then be fine tuned.
+**
