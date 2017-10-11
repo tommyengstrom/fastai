@@ -2,6 +2,7 @@ import keras.layers as L
 import keras.models as M
 import keras.optimizers as O
 from keras.datasets import imdb
+import keras.backend as K
 from keras.preprocessing import sequence
 from keras.models import Sequential
 from keras.layers.embeddings import Embedding
@@ -24,9 +25,9 @@ def load_data():
 
 def build_model():
     return Sequential([Embedding(maxfeatures, 25,input_length=seq_len),
-                      L.Dense(100),
-                      L.Dense(1),
-                      L.Activation('sigmoid')
+                       L.Flatten(),
+                      L.Dense(100, activation=K.relu),
+                      L.Dense(1,activation=K.sigmoid),
                       ])
 
 def main():
@@ -37,9 +38,10 @@ def main():
     print(x_test)
     print(len(x_train), len(x_test))
     print(len(x_train[0]), len(x_test[0]))
+    model.summary()
     model.fit(x_train, y_train,
           batch_size=30,
-          epochs=2,
+          epochs=12,
           validation_data=(x_test, y_test))
 
 if __name__ == "__main__":
